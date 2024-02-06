@@ -95,11 +95,13 @@ public class GraphService {
     public List<User> buildPendingRequestGraphUsers ( User user){
         List<User> usersPending = friendRequestRepository.findUsersWithPendingFriendRequestsBySenderUserId(user.getId());
         List<User> getSuggestionUsers = new ArrayList<>();
+
+       if (usersPending.isEmpty()){
+           return findTopRelatedUsers(user, 5);
+       }
         for (User o: usersPending) {
             List<User> relatedUsers = findTopRelatedUsers(o, 5);
-                    for (User o2: relatedUsers) {
-                        getSuggestionUsers.add(o2);
-                    }
+            getSuggestionUsers.addAll(relatedUsers);
         }
 
         return getSuggestionUsers;
